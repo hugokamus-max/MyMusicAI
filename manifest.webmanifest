@@ -1,0 +1,13 @@
+{
+  "name": "Ritmo — música a tu manera",
+  "short_name": "Ritmo",
+  "description": "Recomendaciones musicales y acceso a videoclips y karaoke.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f4f4ef",
+  "theme_color": "#11130f",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
+
