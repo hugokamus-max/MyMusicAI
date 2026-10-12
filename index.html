@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#11130f" />
+  <meta name="description" content="Ritmo, tu espacio musical con recomendaciones de IA." />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <title>Ritmo — música a tu manera</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#inicio" aria-label="Ritmo, inicio"><span class="brand-mark"><i></i><i></i><i></i></span><span>ritmo<span class="brand-dot">.</span></span></a>
+      <div class="nav-label">MENÚ</div>
+      <nav class="main-nav" aria-label="Navegación principal">
+        <a class="nav-item active" href="#inicio"><span class="nav-icon">⌂</span>Inicio</a>
+        <button class="nav-item" id="navExplore"><span class="nav-icon">⌕</span>Explorar música</button>
+        <button class="nav-item" id="navAssistant"><span class="nav-icon sparkle">✳</span>Asistente IA <span class="new-badge">NUEVO</span></button>
+        <button class="nav-item" id="navVideos"><span class="nav-icon">▷</span>Videoclips</button>
+        <button class="nav-item" id="navKaraoke"><span class="nav-icon">♫</span>Karaoke</button>
+      </nav>
+      <div class="nav-label library-label">TU MÚSICA</div>
+      <div class="library-note"><span class="library-icon">♫</span><div><b>Tu biblioteca, a tu manera</b><p>Conecta YouTube Music para abrir canciones y listas.</p></div></div>
+      <div class="sidebar-bottom"><div class="profile"><div class="avatar">H</div><div><b>Hola, Hugo</b><small>Tu espacio musical</small></div><button class="more-button" aria-label="Más opciones">···</button></div><p class="sidebar-caption">Encuentra el ritmo de cada momento.</p></div>
+    </aside>
+
+    <main class="main-area" id="inicio">
+      <header class="topbar">
+        <button class="mobile-menu" id="menuToggle" aria-label="Abrir menú">☰</button>
+        <div class="breadcrumb">Tu música <span>/</span> <b>Inicio</b></div>
+        <div class="top-actions"><span class="online"><i></i> LISTO PARA ESCUCHAR</span><button class="avatar top-avatar" aria-label="Perfil">H</button></div>
+      </header>
+      <div class="page-content">
+        <section class="welcome-row">
+          <div><p class="eyebrow"><span class="eyebrow-line"></span> TU COMPAÑERA MUSICAL</p><h1>¿Qué ritmo<br class="mobile-break" /> tiene <em>tu día?</em></h1><p class="welcome-copy">Cuéntame cómo te sientes. Encontramos la música juntos.</p></div>
+          <div class="date-note"><span class="sun-icon">☼</span><div><b id="greeting">Un buen momento para escuchar</b><small>Un día, una canción nueva.</small></div></div>
+        </section>
+
+        <section class="assistant-card" id="assistantCard" aria-label="Asistente de música">
+          <div class="assistant-heading"><div class="assistant-symbol"><span>✳</span></div><div><div class="assistant-title">Tu asistente musical <span class="online-tag"><i></i> LISTA</span></div><p>Una idea, una sensación, un artista. Empezamos por ahí.</p></div><button class="collapse-button" aria-label="Contraer asistente">⌃</button></div>
+          <form id="assistantForm" class="prompt-form"><span class="prompt-sparkle">✦</span><input id="promptInput" type="text" autocomplete="off" placeholder="Ej: música tranquila para trabajar con lluvia…" aria-label="Cuéntale a la IA qué quieres escuchar" /><button class="mic-button" id="micButton" type="button" aria-label="Usar voz" title="Hablar">♩</button><button class="send-button" type="submit" aria-label="Enviar">↑</button></form>
+          <div class="prompt-bottom"><span>PRUEBA CON</span><button class="suggestion" data-prompt="Necesito concentrarme">⌁ Concentrarme</button><button class="suggestion" data-prompt="Quiero algo para subir el ánimo">☼ Subir el ánimo</button><button class="suggestion" data-prompt="Música tranquila para relajarme">≈ Relajarme</button><span class="voice-hint" id="voiceHint">Pulsa ♩ para hablar</span></div>
+          <div class="assistant-response" id="assistantResponse" aria-live="polite" hidden></div>
+        </section>
+
+        <section class="mood-section"><div class="section-heading"><div><p class="eyebrow">EMPIEZA POR LO QUE SIENTES</p><h2>¿Cómo quieres sentirte?</h2></div><button class="text-link" id="moreMoods">Ver todos <span>↗</span></button></div>
+          <div class="mood-grid" id="moodGrid">
+            <button class="mood-card mood-focus" data-mood="concentrarme"><span class="mood-symbol">◉</span><span class="mood-title">Concentrarme</span><span class="mood-sub">Sin distracciones</span><span class="mood-arrow">↗</span></button>
+            <button class="mood-card mood-energy" data-mood="subir el ánimo"><span class="mood-symbol">☀</span><span class="mood-title">Subir el ánimo</span><span class="mood-sub">Energía que contagia</span><span class="mood-arrow">↗</span></button>
+            <button class="mood-card mood-calm" data-mood="relajarme"><span class="mood-symbol">〰</span><span class="mood-title">Relajarme</span><span class="mood-sub">Bajar un cambio</span><span class="mood-arrow">↗</span></button>
+            <button class="mood-card mood-discover" data-mood="descubrir algo nuevo"><span class="mood-symbol">✳</span><span class="mood-title">Descubrir</span><span class="mood-sub">Algo que no conocías</span><span class="mood-arrow">↗</span></button>
+          </div>
+        </section>
+
+        <section class="extras-section" id="extrasSection"><div class="section-heading"><div><p class="eyebrow">MÁS FORMAS DE DISFRUTAR</p><h2>Escucha, mira y canta</h2></div></div><div class="extras-grid">
+          <article class="extra-card video-extra"><div class="extra-art video-art"><span class="art-orbit orbit-one"></span><span class="art-orbit orbit-two"></span><span class="art-play">▶</span><span class="art-caption">SOUND<br/>IN<br/>MOTION</span><span class="art-label">VIDEOCLIPS</span></div><div class="extra-copy"><span class="extra-kicker">MÚSICA EN IMÁGENES</span><h3>La canción también se mira.</h3><p>Encuentra el videoclip y disfrútalo en el reproductor oficial.</p><button class="extra-button" id="videosButton">Explorar videoclips <span>↗</span></button></div></article>
+          <article class="extra-card karaoke-extra"><div class="extra-art karaoke-art"><span class="karaoke-disc disc-a"></span><span class="karaoke-disc disc-b"></span><span class="karaoke-mic">♩</span><span class="art-label">KARAOKE CLUB</span><span class="karaoke-wave">〰 〰 〰</span></div><div class="extra-copy"><span class="extra-kicker">EL ESCENARIO ES TUYO</span><h3>Tu voz, al frente.</h3><p>Busca una versión karaoke y canta con el video original.</p><button class="extra-button" id="karaokeButton">Encontrar karaoke <span>↗</span></button></div></article>
+        </div><p class="extra-note">El reproductor oficial conserva sus controles, créditos y anuncios.</p></section>
+
+        <section class="recommend-section" id="recommendSection"><div class="section-heading"><div><p class="eyebrow">SELECCIÓN PARA TI <span class="tiny-sparkle">✦</span></p><h2 id="recommendTitle">Tu punto de partida</h2></div><button class="text-link" id="refreshButton">Otra selección <span>⟳</span></button></div><div class="track-grid" id="trackGrid"></div></section>
+        <footer class="footer"><span>Hecho para encontrar tu próximo momento favorito.</span><span class="footer-note"><i></i> La reproducción se abre en YouTube Music</span></footer>
+      </div>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
+
