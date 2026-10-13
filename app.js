@@ -37,8 +37,14 @@ const responseBox = $("#assistantResponse");
 const promptInput = $("#promptInput");
 let currentMood = "inicio";
 let currentPrompt = "";
+let currentTracks = null;
+let conversationHistory = [];
 let rotation = 0;
 let toastTimer;
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
+}
 
 function openYouTubeMusic(query) {
   window.open(`https://music.youtube.com/search?q=${encodeURIComponent(query)}`, "_blank", "noopener,noreferrer");
@@ -63,19 +69,20 @@ function showToast(message) {
 }
 
 function renderTracks() {
-  const list = [...(catalogs[currentMood] || catalogs.inicio)];
+  const list = [...(currentTracks || catalogs[currentMood] || catalogs.inicio)];
   if (rotation) list.push(...list.splice(0, Math.min(rotation % list.length, list.length)));
   trackGrid.innerHTML = list.map((track, index) => `
     <article class="track-card">
-      <div class="cover cover-${(index % 4) + 1}"><span class="cover-index">R / 0${index + 1}</span><span class="cover-word">${track.title}</span></div>
-      <div class="track-meta"><div><h3 title="${track.title}">${track.title}</h3><p>${track.artist}</p></div><span class="track-time">♫</span></div>
-      <div class="track-actions"><span class="track-tag">${track.mood}</span><button class="listen-button" data-action="listen" data-query="${track.search}">Escuchar ↗</button></div>
-      <div class="track-subactions"><button data-action="video" data-query="${track.search}">▷ Videoclip</button><button data-action="karaoke" data-query="${track.search}">♫ Karaoke</button></div>
+      <div class="cover cover-${(index % 4) + 1}"><span class="cover-index">R / 0${index + 1}</span><span class="cover-word">${escapeHtml(track.title)}</span></div>
+      <div class="track-meta"><div><h3 title="${escapeHtml(track.title)}">${escapeHtml(track.title)}</h3><p>${escapeHtml(track.artist)}</p></div><span class="track-time">♫</span></div>
+      <div class="track-actions"><span class="track-tag">${escapeHtml(track.mood)}</span><button class="listen-button" data-action="listen" data-query="${escapeHtml(track.search)}">Escuchar ↗</button></div>
+      <div class="track-subactions"><button data-action="video" data-query="${escapeHtml(track.search)}">▷ Videoclip</button><button data-action="karaoke" data-query="${escapeHtml(track.search)}">♫ Karaoke</button></div>
     </article>`).join("");
 }
 
 function setMood(mood) {
   currentMood = mood;
+  currentTracks = null;
   const names = { inicio: "Tu punto de partida", concentrarme: "Música para concentrarte", "subir el ánimo": "Una dosis de buena energía", relajarme: "Un momento para bajar un cambio", "descubrir algo nuevo": "Nuevos sonidos para ti" };
   $("#recommendTitle").textContent = names[mood] || names.inicio;
   renderTracks();
@@ -104,6 +111,53 @@ function answerPrompt(prompt) {
   responseBox.hidden = false;
 }
 
+async function sendPrompt(prompt, fromVoice = false) {
+  currentPrompt = prompt;
+  responseBox.hidden = false;
+  responseBox.textContent = "Buscando música para ti…";
+  const submitButton = $(".send-button");
+  submitButton.disabled = true;
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ message: prompt, history: conversationHistory })
+    });
+    if (!response.ok) throw new Error(response.status === 503 ? "not_configured" : "unavailable");
+    const answer = await response.json();
+    currentMood = answer.mood || "descubrir algo nuevo";
+    currentTracks = Array.isArray(answer.tracks) && answer.tracks.length ? answer.tracks : null;
+    $("#recommendTitle").textContent = ({
+      inicio: "Tu punto de partida", concentrarme: "Música para concentrarte", "subir el ánimo": "Una dosis de buena energía", relajarme: "Un momento para bajar un cambio", "descubrir algo nuevo": "Nuevos sonidos para ti"
+    })[currentMood] || "Tu selección personalizada";
+    responseBox.textContent = answer.reply || "Encontré algunas canciones para ti.";
+    conversationHistory.push({ role: "user", content: prompt }, { role: "assistant", content: responseBox.textContent });
+    conversationHistory = conversationHistory.slice(-8);
+    rotation = 0;
+    renderTracks();
+    $("#recommendSection").scrollIntoView({ behavior: "smooth", block: "nearest" });
+    if (fromVoice && "speechSynthesis" in window) {
+      const utterance = new SpeechSynthesisUtterance(responseBox.textContent);
+      utterance.lang = "es";
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utterance);
+    }
+  } catch (error) {
+    answerPrompt(prompt);
+    responseBox.textContent += error.message === "not_configured"
+      ? " · Modo de muestra: falta configurar OPENAI_API_KEY en el archivo local .env para activar la IA."
+      : " · Ahora estoy en modo de muestra; revisa la conexión del servidor para activar la IA.";
+    if (fromVoice && "speechSynthesis" in window) {
+      const utterance = new SpeechSynthesisUtterance(responseBox.textContent);
+      utterance.lang = "es";
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utterance);
+    }
+  } finally {
+    submitButton.disabled = false;
+  }
+}
+
 $("#assistantForm").addEventListener("submit", (event) => {
   event.preventDefault();
   const value = promptInput.value.trim();
@@ -111,7 +165,7 @@ $("#assistantForm").addEventListener("submit", (event) => {
     promptInput.focus();
     return;
   }
-  answerPrompt(value);
+  sendPrompt(value);
   promptInput.value = "";
 });
 
@@ -161,7 +215,7 @@ $("#micButton").addEventListener("click", () => {
   recognition.onresult = (event) => {
     const spoken = event.results[0][0].transcript;
     promptInput.value = spoken;
-    answerPrompt(spoken);
+    sendPrompt(spoken, true);
   };
   recognition.onerror = () => showToast("No pude escuchar con claridad. Intenta otra vez.");
   recognition.onend = () => {
