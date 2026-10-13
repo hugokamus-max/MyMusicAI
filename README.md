@@ -36,6 +36,17 @@ Este prototipo abre música en YouTube Music y búsquedas de video en YouTube; n
 
 ## Publicar
 
-GitHub guarda el código fuente. Para usar la IA en línea, el servidor Node también debe desplegarse en un servicio que mantenga la clave como secreto; GitHub Pages por sí solo no ejecuta el servidor.
+GitHub guarda el código fuente. El archivo `render.yaml` prepara el servidor Node para desplegar Ritmo en Render, que alojará la app y la ruta de IA en el mismo servicio.
+
+### Desplegar en Render
+
+1. Crea una cuenta en [Render](https://render.com/) y conecta GitHub.
+2. En el panel, elige **New → Blueprint** y selecciona `hugokamus-max/MyMusicAI`.
+3. Inicia el despliegue y abre la URL `onrender.com` que Render asigne al servicio. Sin clave, el prototipo funciona en modo de muestra.
+4. Para activar la IA, entra en **Environment** en el panel del servicio y añade `OPENAI_API_KEY` como secreto; guarda los cambios para que Render reinicie el servicio. No la guardes en GitHub ni en el código. Consulta la [guía de variables de entorno de Render](https://render.com/docs/configure-environment-variables).
+
+El plan gratuito sirve para una primera demostración, pero Render lo suspende tras 15 minutos sin tráfico y puede tardar cerca de un minuto en volver a iniciar. No es adecuado para producción. La API de OpenAI tiene su propia facturación; configura límites de gasto en tu cuenta. GitHub Pages no puede ejecutar este servidor Node.
+
 
 La app está pensada para ser pública y explorar ingresos. Consulta la [hoja de ruta](ROADMAP.md) para ver las decisiones y permisos que falta resolver antes de monetizar música o karaoke.
+
