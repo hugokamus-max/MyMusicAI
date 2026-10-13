@@ -5,6 +5,8 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(fileURLToPath(new URL(".", import.meta.url)));
 const port = Number(process.env.PORT || 3000);
+let aiUsageDay = new Date().toISOString().slice(0, 10);
+let dailyAIRequests = 0;
 
 function loadLocalEnv() {
   const envPath = join(root, ".env");
@@ -69,6 +71,15 @@ async function handleChat(request, response) {
 
   const message = typeof payload.message === "string" ? payload.message.trim().slice(0, 700) : "";
   if (!message) return sendJson(response, 400, { error: "message_required" });
+
+  const today = new Date().toISOString().slice(0, 10);
+  if (today !== aiUsageDay) {
+    aiUsageDay = today;
+    dailyAIRequests = 0;
+  }
+  const dailyLimit = Math.max(1, Number(process.env.AI_DAILY_REQUEST_LIMIT || 100));
+  if (dailyAIRequests >= dailyLimit) return sendJson(response, 429, { error: "daily_limit_reached" });
+  dailyAIRequests += 1;
 
   const history = Array.isArray(payload.history)
     ? payload.history.slice(-8).filter((item) => item && ["user", "assistant"].includes(item.role) && typeof item.content === "string")
@@ -142,7 +153,17 @@ createServer(async (request, response) => {
   if (request.method === "POST" && url.pathname === "/api/chat") return handleChat(request, response);
   if (!["GET", "HEAD"].includes(request.method)) return sendJson(response, 405, { error: "method_not_allowed" });
 
-  const pathname = decodeURIComponent(url.pathname === "/" ? "/index.html" : url.pathname);
+  let pathname;
+  try {
+    pathname = decodeURIComponent(url.pathname === "/" ? "/index.html" : url.pathname);
+  } catch {
+    response.writeHead(400);
+    return response.end("Bad request");
+  }
+  if (pathname.split("/").some((segment) => segment.startsWith("."))) {
+    response.writeHead(404);
+    return response.end("Not found");
+  }
   const filePath = resolve(root, `.${pathname}`);
   const relativePath = relative(root, filePath);
   if (relativePath.startsWith("..") || isAbsolute(relativePath) || !existsSync(filePath) || !statSync(filePath).isFile()) {
