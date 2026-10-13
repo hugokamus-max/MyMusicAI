@@ -38,3 +38,4 @@ Este prototipo abre música en YouTube Music y búsquedas de video en YouTube; n
 
 GitHub guarda el código fuente. Para usar la IA en línea, el servidor Node también debe desplegarse en un servicio que mantenga la clave como secreto; GitHub Pages por sí solo no ejecuta el servidor.
 
+La app está pensada para ser pública y explorar ingresos. Consulta la [hoja de ruta](ROADMAP.md) para ver las decisiones y permisos que falta resolver antes de monetizar música o karaoke.
