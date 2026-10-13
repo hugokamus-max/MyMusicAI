@@ -33,7 +33,8 @@ createServer((request, response) => {
     response.writeHead(400);
     return response.end("Bad request");
   }
-  if (pathname.split("/").some((segment) => segment.startsWith("."))) {
+  const isDigitalAssetLinks = pathname === "/.well-known/assetlinks.json";
+  if (!isDigitalAssetLinks && pathname.split("/").some((segment) => segment.startsWith("."))) {
     response.writeHead(404);
     return response.end("Not found");
   }

@@ -3,4 +3,14 @@
 !.env.example
 node_modules/
 *.log
+*.keystore
+*.jks
+*.p12
+*.pem
+android/local.properties
+android/twa-manifest.local.json
+android/gradle.properties
+android/.gradle/
+android/build/
+android/app/build/
 

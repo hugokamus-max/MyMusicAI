@@ -12,7 +12,9 @@ Abre [Ritmo en Render](https://ritmo-ai.onrender.com).
 - Selecciones de canciones organizadas por estado de ánimo.
 - Búsqueda de canciones en YouTube Music.
 - Búsqueda de videoclips y karaoke en YouTube.
+- Biblioteca de favoritos guardada localmente en el dispositivo, sin cuenta.
 - No se envían solicitudes a OpenAI ni se necesita una clave de API.
+- Incluye un borrador de política de privacidad y un manifiesto con iconos PNG para la versión instalable.
 
 ## Iniciar en tu computadora
 
@@ -26,7 +28,7 @@ Luego abre `http://localhost:3000`.
 
 ## Qué falta para completar el producto
 
-- Cuentas, biblioteca personal y listas.
+- Cuentas y sincronización de biblioteca entre dispositivos.
 - Integración con un catálogo de letras que permita su uso dentro de la app. Las letras sincronizadas necesitan derechos de exhibición.
 - Motor de karaoke que sincronice letras y evalúe la voz. Esta versión abre búsquedas de karaoke en YouTube y no graba ni puntúa la voz.
 - Aplicaciones nativas para las tiendas de iOS y Android. La PWA sirve para probar en varios dispositivos desde el navegador.
