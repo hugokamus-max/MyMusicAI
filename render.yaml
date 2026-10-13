@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: ritmo-ai
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: OPENAI_MODEL
+        value: gpt-6-astra
+
