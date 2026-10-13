@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#11130f" />
-  <meta name="description" content="Ritmo, tu espacio musical con recomendaciones de IA." />
+  <meta name="description" content="Ritmo, tu espacio para encontrar música, videoclips y karaoke." />
   <link rel="manifest" href="manifest.webmanifest" />
   <title>Ritmo — música a tu manera</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -20,7 +20,6 @@
       <nav class="main-nav" aria-label="Navegación principal">
         <a class="nav-item active" href="#inicio"><span class="nav-icon">⌂</span>Inicio</a>
         <button class="nav-item" id="navExplore"><span class="nav-icon">⌕</span>Explorar música</button>
-        <button class="nav-item" id="navAssistant"><span class="nav-icon sparkle">✳</span>Asistente IA <span class="new-badge">NUEVO</span></button>
         <button class="nav-item" id="navVideos"><span class="nav-icon">▷</span>Videoclips</button>
         <button class="nav-item" id="navKaraoke"><span class="nav-icon">♫</span>Karaoke</button>
       </nav>
@@ -37,15 +36,8 @@
       </header>
       <div class="page-content">
         <section class="welcome-row">
-          <div><p class="eyebrow"><span class="eyebrow-line"></span> TU COMPAÑERA MUSICAL</p><h1>¿Qué ritmo<br class="mobile-break" /> tiene <em>tu día?</em></h1><p class="welcome-copy">Cuéntame cómo te sientes. Encontramos la música juntos.</p></div>
+          <div><p class="eyebrow"><span class="eyebrow-line"></span> TU ESPACIO MUSICAL</p><h1>¿Qué ritmo<br class="mobile-break" /> tiene <em>tu día?</em></h1><p class="welcome-copy">Elige cómo te sientes o busca una canción para empezar.</p></div>
           <div class="date-note"><span class="sun-icon">☼</span><div><b id="greeting">Un buen momento para escuchar</b><small>Un día, una canción nueva.</small></div></div>
-        </section>
-
-        <section class="assistant-card" id="assistantCard" aria-label="Asistente de música">
-          <div class="assistant-heading"><div class="assistant-symbol"><span>✳</span></div><div><div class="assistant-title">Tu asistente musical <span class="online-tag"><i></i> LISTA</span></div><p>Una idea, una sensación, un artista. Empezamos por ahí.</p></div><button class="collapse-button" aria-label="Contraer asistente">⌃</button></div>
-          <form id="assistantForm" class="prompt-form"><span class="prompt-sparkle">✦</span><input id="promptInput" type="text" autocomplete="off" placeholder="Ej: música tranquila para trabajar con lluvia…" aria-label="Cuéntale a la IA qué quieres escuchar" /><button class="mic-button" id="micButton" type="button" aria-label="Usar voz" title="Hablar">♩</button><button class="send-button" type="submit" aria-label="Enviar">↑</button></form>
-          <div class="prompt-bottom"><span>PRUEBA CON</span><button class="suggestion" data-prompt="Necesito concentrarme">⌁ Concentrarme</button><button class="suggestion" data-prompt="Quiero algo para subir el ánimo">☼ Subir el ánimo</button><button class="suggestion" data-prompt="Música tranquila para relajarme">≈ Relajarme</button><span class="voice-hint" id="voiceHint">Pulsa ♩ para hablar</span></div>
-          <div class="assistant-response" id="assistantResponse" aria-live="polite" hidden></div>
         </section>
 
         <section class="mood-section"><div class="section-heading"><div><p class="eyebrow">EMPIEZA POR LO QUE SIENTES</p><h2>¿Cómo quieres sentirte?</h2></div><button class="text-link" id="moreMoods">Ver todos <span>↗</span></button></div>

@@ -33,12 +33,9 @@ const catalogs = {
 
 const $ = (selector) => document.querySelector(selector);
 const trackGrid = $("#trackGrid");
-const responseBox = $("#assistantResponse");
-const promptInput = $("#promptInput");
 let currentMood = "inicio";
-let currentPrompt = "";
+let currentPrompt = "canciones populares";
 let currentTracks = null;
-let conversationHistory = [];
 let rotation = 0;
 let toastTimer;
 
@@ -95,6 +92,7 @@ function renderTracks() {
 
 function setMood(mood) {
   currentMood = mood;
+  currentPrompt = mood === "inicio" ? "canciones populares" : mood;
   currentTracks = null;
   const names = { inicio: "Tu punto de partida", concentrarme: "Música para concentrarte", "subir el ánimo": "Una dosis de buena energía", relajarme: "Un momento para bajar un cambio", "descubrir algo nuevo": "Nuevos sonidos para ti" };
   $("#recommendTitle").textContent = names[mood] || names.inicio;
@@ -103,86 +101,6 @@ function setMood(mood) {
   $("#recommendSection").scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
-function answerPrompt(prompt) {
-  const text = prompt.toLocaleLowerCase("es");
-  let mood = "descubrir algo nuevo";
-  let reply = "¡Vamos a encontrar algo nuevo! Te dejo algunas canciones para explorar.";
-  if (/concentr|trabaj|estudi|enfoq/.test(text)) {
-    mood = "concentrarme";
-    reply = "Para concentrarte, elegí sonidos envolventes y con pocos cambios. Probá estas opciones y decime cuál te ayuda más.";
-  } else if (/ánimo|energia|energía|alegr|fiesta|bail|anim/.test(text)) {
-    mood = "subir el ánimo";
-    reply = "Vamos a levantar el ánimo. Acá tienes canciones con energía y ritmo para cambiar el aire.";
-  } else if (/relaj|tranquil|calma|descans|lluvia|dormir/.test(text)) {
-    mood = "relajarme";
-    reply = "Busqué una selección tranquila para bajar un cambio. Prueba estas canciones y vemos cuál acompaña mejor el momento.";
-  }
-  currentPrompt = prompt;
-  responseBox.hidden = false;
-  responseBox.textContent = reply;
-  setMood(mood);
-  responseBox.hidden = false;
-}
-
-async function sendPrompt(prompt, fromVoice = false) {
-  currentPrompt = prompt;
-  responseBox.hidden = false;
-  responseBox.textContent = "Buscando música para ti…";
-  const submitButton = $(".send-button");
-  submitButton.disabled = true;
-  try {
-    const response = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ message: prompt, history: conversationHistory })
-    });
-    if (!response.ok) throw new Error(response.status === 503 ? "not_configured" : "unavailable");
-    const answer = await response.json();
-    currentMood = answer.mood || "descubrir algo nuevo";
-    currentTracks = Array.isArray(answer.tracks) && answer.tracks.length ? answer.tracks : null;
-    $("#recommendTitle").textContent = ({
-      inicio: "Tu punto de partida", concentrarme: "Música para concentrarte", "subir el ánimo": "Una dosis de buena energía", relajarme: "Un momento para bajar un cambio", "descubrir algo nuevo": "Nuevos sonidos para ti"
-    })[currentMood] || "Tu selección personalizada";
-    responseBox.textContent = answer.reply || "Encontré algunas canciones para ti.";
-    conversationHistory.push({ role: "user", content: prompt }, { role: "assistant", content: responseBox.textContent });
-    conversationHistory = conversationHistory.slice(-8);
-    rotation = 0;
-    renderTracks();
-    $("#recommendSection").scrollIntoView({ behavior: "smooth", block: "nearest" });
-    if (fromVoice && "speechSynthesis" in window) {
-      const utterance = new SpeechSynthesisUtterance(responseBox.textContent);
-      utterance.lang = "es";
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(utterance);
-    }
-  } catch (error) {
-    answerPrompt(prompt);
-    responseBox.textContent += error.message === "not_configured"
-      ? " · Modo de muestra: falta configurar OPENAI_API_KEY en el archivo local .env para activar la IA."
-      : " · Ahora estoy en modo de muestra; revisa la conexión del servidor para activar la IA.";
-    if (fromVoice && "speechSynthesis" in window) {
-      const utterance = new SpeechSynthesisUtterance(responseBox.textContent);
-      utterance.lang = "es";
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(utterance);
-    }
-  } finally {
-    submitButton.disabled = false;
-  }
-}
-
-$("#assistantForm").addEventListener("submit", (event) => {
-  event.preventDefault();
-  const value = promptInput.value.trim();
-  if (!value) {
-    promptInput.focus();
-    return;
-  }
-  sendPrompt(value);
-  promptInput.value = "";
-});
-
-document.querySelectorAll(".suggestion").forEach((button) => button.addEventListener("click", () => answerPrompt(button.dataset.prompt)));
 document.querySelectorAll(".mood-card").forEach((button) => button.addEventListener("click", () => setMood(button.dataset.mood)));
 
 trackGrid.addEventListener("click", (event) => {
@@ -212,40 +130,10 @@ $("#navExplore").addEventListener("click", () => {
   $("#quickSearch").scrollIntoView({ behavior: "smooth" });
   $("#musicSearchInput").focus({ preventScroll: true });
 });
-$("#navAssistant").addEventListener("click", () => {
-  $("#assistantCard").scrollIntoView({ behavior: "smooth" });
-  promptInput.focus({ preventScroll: true });
-});
 $("#navVideos").addEventListener("click", () => $("#extrasSection").scrollIntoView({ behavior: "smooth" }));
 $("#navKaraoke").addEventListener("click", () => $("#extrasSection").scrollIntoView({ behavior: "smooth" }));
 $("#menuToggle").addEventListener("click", () => $("#sidebar").classList.toggle("open"));
 document.querySelectorAll(".nav-item").forEach((button) => button.addEventListener("click", () => $("#sidebar").classList.remove("open")));
-
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-$("#micButton").addEventListener("click", () => {
-  if (!SpeechRecognition) {
-    showToast("El dictado de voz no está disponible en este navegador. Prueba con Chrome o Edge.");
-    return;
-  }
-  const recognition = new SpeechRecognition();
-  recognition.lang = "es";
-  recognition.interimResults = false;
-  const mic = $("#micButton");
-  const hint = $("#voiceHint");
-  mic.classList.add("listening");
-  hint.textContent = "Te escucho…";
-  recognition.onresult = (event) => {
-    const spoken = event.results[0][0].transcript;
-    promptInput.value = spoken;
-    sendPrompt(spoken, true);
-  };
-  recognition.onerror = () => showToast("No pude escuchar con claridad. Intenta otra vez.");
-  recognition.onend = () => {
-    mic.classList.remove("listening");
-    hint.textContent = "Pulsa ♩ para hablar";
-  };
-  recognition.start();
-});
 
 renderTracks();
 

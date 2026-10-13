@@ -1,38 +1,36 @@
 # Ritmo
 
-App web instalable para descubrir música, pedir recomendaciones por texto o voz y abrir canciones, videoclips y versiones de karaoke en los reproductores oficiales de YouTube.
+App web instalable para descubrir música por estado de ánimo y abrir canciones, videoclips y versiones de karaoke en los reproductores oficiales de YouTube. La asistencia de IA está pausada por ahora.
 
 ## Demo pública
 
-Abre [Ritmo en Render](https://ritmo-ai.onrender.com). El asistente funciona en modo de muestra hasta que se configure `OPENAI_API_KEY` como variable secreta del servicio.
+Abre [Ritmo en Render](https://ritmo-ai.onrender.com).
 
 ## Qué funciona en esta versión
 
 - Interfaz adaptable a teléfono y escritorio, con base PWA para instalar desde el navegador.
-- Recomendaciones de muestra con categorías por estado de ánimo.
-- Asistente de demostración si no hay una clave configurada; con una clave usa OpenAI Responses API para conversar y sugerir canciones.
-- Dictado por micrófono con reconocimiento de voz del navegador, si el navegador lo admite.
-- Lectura en voz alta de la respuesta con la voz disponible en el navegador.
-- Acciones para abrir canciones en YouTube Music y búsquedas de videoclips o karaoke en YouTube.
+- Selecciones de canciones organizadas por estado de ánimo.
+- Búsqueda de canciones en YouTube Music.
+- Búsqueda de videoclips y karaoke en YouTube.
+- No se envían solicitudes a OpenAI ni se necesita una clave de API.
 
 ## Iniciar en tu computadora
 
-Se necesita Node.js. Copia `.env.example` a `.env`, agrega tu clave de API y luego inicia el servidor:
+Se necesita Node.js. Inicia el servidor con:
 
 ```powershell
-Copy-Item .env.example .env
-# Edita .env y reemplaza pega_tu_clave_aqui
-node server.js
+npm start
 ```
 
-La clave se queda en `.env`, que Git ignora. No la publiques ni la pegues en el chat. Sin clave, la app sigue funcionando en modo de muestra. La API de OpenAI puede generar cargos según tu cuenta y uso.
+Luego abre `http://localhost:3000`.
 
 ## Qué falta para completar el producto
 
 - Cuentas, biblioteca personal y listas.
 - Integración con un catálogo de letras que permita su uso dentro de la app. Las letras sincronizadas necesitan derechos de exhibición.
-- Motor de karaoke que sincronice letras y evalúe la voz. Esta versión no graba ni puntúa la voz.
+- Motor de karaoke que sincronice letras y evalúe la voz. Esta versión abre búsquedas de karaoke en YouTube y no graba ni puntúa la voz.
 - Aplicaciones nativas para las tiendas de iOS y Android. La PWA sirve para probar en varios dispositivos desde el navegador.
+- La asistencia de IA queda para una etapa posterior.
 
 ## Límites del reproductor
 
@@ -40,17 +38,7 @@ Este prototipo abre música en YouTube Music y búsquedas de video en YouTube; n
 
 ## Publicar
 
-GitHub guarda el código fuente. El archivo `render.yaml` prepara el servidor Node para desplegar Ritmo en Render, que alojará la app y la ruta de IA en el mismo servicio.
+GitHub guarda el código fuente. El archivo `render.yaml` prepara el servidor Node para desplegar Ritmo en Render.
 
-### Desplegar en Render
-
-1. Crea una cuenta en [Render](https://render.com/) y conecta GitHub.
-2. En el panel, elige **New → Blueprint** y selecciona `hugokamus-max/MyMusicAI`.
-3. Inicia el despliegue y abre la URL `onrender.com` que Render asigne al servicio. Sin clave, el prototipo funciona en modo de muestra.
-4. Para activar la IA, entra en **Environment** en el panel del servicio y añade `OPENAI_API_KEY` como secreto; guarda los cambios para que Render reinicie el servicio. No la guardes en GitHub ni en el código. Consulta la [guía de variables de entorno de Render](https://render.com/docs/configure-environment-variables).
-
-El plan gratuito sirve para una primera demostración, pero Render lo suspende tras 15 minutos sin tráfico y puede tardar cerca de un minuto en volver a iniciar. No es adecuado para producción. La API tiene un límite básico de 100 solicitudes por día y por instancia para la demo; se reinicia al reiniciar el servidor y no sustituye un control de uso persistente. Configura también límites de gasto en tu cuenta de OpenAI. GitHub Pages no puede ejecutar este servidor Node.
-
-
-La app está pensada para ser pública y explorar ingresos. Consulta la [hoja de ruta](ROADMAP.md) para ver las decisiones y permisos que falta resolver antes de monetizar música o karaoke.
+El plan gratuito de Render puede suspender el servicio tras un período sin tráfico y tardar en volver a iniciar. La app está pensada para ser pública y explorar ingresos. Consulta la [hoja de ruta](ROADMAP.md) para ver las decisiones y permisos que falta resolver antes de monetizar música o karaoke.
 
