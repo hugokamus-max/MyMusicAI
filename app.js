@@ -33,11 +33,20 @@ const catalogs = {
 
 const $ = (selector) => document.querySelector(selector);
 const trackGrid = $("#trackGrid");
+const themeSelect = $("#themeSelect");
 let currentMood = "inicio";
 let currentPrompt = "canciones populares";
 let currentTracks = null;
 let rotation = 0;
 let toastTimer;
+
+const savedTheme = localStorage.getItem("ritmo-theme") || "night";
+document.body.dataset.theme = savedTheme;
+themeSelect.value = savedTheme;
+themeSelect.addEventListener("change", () => {
+  document.body.dataset.theme = themeSelect.value;
+  localStorage.setItem("ritmo-theme", themeSelect.value);
+});
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
@@ -140,4 +149,3 @@ renderTracks();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
   window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js").catch(() => {}));
 }
-
