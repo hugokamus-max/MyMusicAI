@@ -9,4 +9,6 @@ services:
     envVars:
       - key: OPENAI_MODEL
         value: gpt-6-astra
+      - key: AI_DAILY_REQUEST_LIMIT
+        value: "100"
 
