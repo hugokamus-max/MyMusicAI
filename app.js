@@ -54,6 +54,19 @@ function openYouTube(query) {
   window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`, "_blank", "noopener,noreferrer");
 }
 
+function runMusicSearch(type = "music") {
+  const input = $("#musicSearchInput");
+  const query = input.value.trim();
+  if (!query) {
+    input.focus();
+    showToast("Escribe una canción, artista o género para buscar.");
+    return;
+  }
+  if (type === "video") openYouTube(`${query} official music video`);
+  else if (type === "karaoke") openYouTube(`${query} karaoke instrumental`);
+  else openYouTubeMusic(query);
+}
+
 function showToast(message) {
   let toast = $(".toast");
   if (!toast) {
@@ -189,7 +202,16 @@ $("#refreshButton").addEventListener("click", () => {
   showToast("Renovamos la selección. Elige una canción para escucharla.");
 });
 $("#moreMoods").addEventListener("click", () => showToast("Pronto podrás explorar más estados de ánimo."));
-$("#navExplore").addEventListener("click", () => $("#recommendSection").scrollIntoView({ behavior: "smooth" }));
+$("#musicSearchForm").addEventListener("submit", (event) => {
+  event.preventDefault();
+  runMusicSearch("music");
+});
+document.querySelectorAll("[data-search-type]").forEach((button) => button.addEventListener("click", () => runMusicSearch(button.dataset.searchType)));
+
+$("#navExplore").addEventListener("click", () => {
+  $("#quickSearch").scrollIntoView({ behavior: "smooth" });
+  $("#musicSearchInput").focus({ preventScroll: true });
+});
 $("#navAssistant").addEventListener("click", () => {
   $("#assistantCard").scrollIntoView({ behavior: "smooth" });
   promptInput.focus({ preventScroll: true });
