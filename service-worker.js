@@ -1,4 +1,4 @@
-const CACHE_NAME = "ritmo-static-v4";
+const CACHE_NAME = "ritmo-static-v5";
 const APP_ASSETS = ["./", "./index.html", "./styles.css", "./app.js", "./manifest.webmanifest", "./icon.svg"];
 
 self.addEventListener("install", (event) => {
