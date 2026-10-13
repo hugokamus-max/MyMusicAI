@@ -2,6 +2,10 @@
 
 App web instalable para descubrir música, pedir recomendaciones por texto o voz y abrir canciones, videoclips y versiones de karaoke en los reproductores oficiales de YouTube.
 
+## Demo pública
+
+Abre [Ritmo en Render](https://ritmo-ai.onrender.com). El asistente funciona en modo de muestra hasta que se configure `OPENAI_API_KEY` como variable secreta del servicio.
+
 ## Qué funciona en esta versión
 
 - Interfaz adaptable a teléfono y escritorio, con base PWA para instalar desde el navegador.
