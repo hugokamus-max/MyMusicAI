@@ -22,17 +22,18 @@
         <button class="nav-item" id="navExplore"><span class="nav-icon">⌕</span>Explorar música</button>
         <button class="nav-item" id="navVideos"><span class="nav-icon">▷</span>Videoclips</button>
         <button class="nav-item" id="navKaraoke"><span class="nav-icon">♫</span>Karaoke</button>
+        <button class="nav-item" id="navLibrary"><span class="nav-icon">♡</span>Favoritos</button>
       </nav>
       <div class="nav-label library-label">TU MÚSICA</div>
-      <div class="library-note"><span class="library-icon">♫</span><div><b>Tu biblioteca, a tu manera</b><p>Conecta YouTube Music para abrir canciones y listas.</p></div></div>
-      <div class="sidebar-bottom"><div class="profile"><div class="avatar">H</div><div><b>Hola, Hugo</b><small>Tu espacio musical</small></div><button class="more-button" aria-label="Más opciones">···</button></div><p class="sidebar-caption">Encuentra el ritmo de cada momento.</p></div>
+      <div class="library-note"><span class="library-icon">♡</span><div><b>Tu biblioteca, a tu manera</b><p>Guarda canciones en este dispositivo, sin crear una cuenta.</p></div></div>
+      <div class="sidebar-bottom"><div class="profile"><div class="avatar">R</div><div><b>Modo invitado</b><small>Favoritos en este dispositivo</small></div></div><p class="sidebar-caption">Encuentra el ritmo de cada momento.</p></div>
     </aside>
 
     <main class="main-area" id="inicio">
       <header class="topbar">
         <button class="mobile-menu" id="menuToggle" aria-label="Abrir menú">☰</button>
         <div class="breadcrumb">Tu música <span>/</span> <b>Inicio</b></div>
-        <div class="top-actions"><span class="online"><i></i> LISTO PARA ESCUCHAR</span><label class="theme-control"><span aria-hidden="true">◐</span><select id="themeSelect" aria-label="Cambiar tema"><option value="night">Noche</option><option value="forest">Bosque</option><option value="sunset">Atardecer</option><option value="light">Claro</option></select></label><button class="avatar top-avatar" aria-label="Perfil">H</button></div>
+        <div class="top-actions"><span class="online"><i></i> LISTO PARA ESCUCHAR</span><label class="theme-control"><span aria-hidden="true">◐</span><select id="themeSelect" aria-label="Cambiar tema"><option value="night">Noche</option><option value="forest">Bosque</option><option value="sunset">Atardecer</option><option value="light">Claro</option></select></label></div>
       </header>
       <div class="page-content">
         <section class="welcome-row">
@@ -57,10 +58,12 @@
         </div><p class="extra-note">El reproductor oficial conserva sus controles, créditos y anuncios.</p></section>
 
         <section class="recommend-section" id="recommendSection"><div class="section-heading"><div><p class="eyebrow">SELECCIÓN PARA TI <span class="tiny-sparkle">✦</span></p><h2 id="recommendTitle">Tu punto de partida</h2></div><button class="text-link" id="refreshButton">Otra selección <span>⟳</span></button></div><div class="track-grid" id="trackGrid"></div></section>
-        <footer class="footer"><span>Hecho para encontrar tu próximo momento favorito.</span><span class="footer-note"><i></i> La reproducción se abre en YouTube Music</span></footer>
+        <section class="favorites-section" id="favoritesSection"><div class="section-heading"><div><p class="eyebrow">TU COLECCIÓN</p><h2>Mis favoritos</h2></div></div><div class="track-grid" id="favoritesGrid"></div></section>
+        <footer class="footer"><span>Hecho para encontrar tu próximo momento favorito.</span><span class="footer-note"><a href="privacy.html">Privacidad</a> · <i></i> La reproducción se abre en YouTube Music</span></footer>
       </div>
     </main>
   </div>
   <script src="app.js"></script>
 </body>
 </html>
+
