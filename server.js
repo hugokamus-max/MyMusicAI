@@ -138,6 +138,7 @@ const mimeTypes = {
 
 createServer(async (request, response) => {
   const url = new URL(request.url || "/", `http://${request.headers.host || "localhost"}`);
+  if (request.method === "GET" && url.pathname === "/healthz") return sendJson(response, 200, { status: "ok" });
   if (request.method === "POST" && url.pathname === "/api/chat") return handleChat(request, response);
   if (!["GET", "HEAD"].includes(request.method)) return sendJson(response, 405, { error: "method_not_allowed" });
 
@@ -152,7 +153,7 @@ createServer(async (request, response) => {
   response.writeHead(200, { "content-type": mimeTypes[extname(filePath)] || "application/octet-stream", "cache-control": "no-cache" });
   if (request.method === "HEAD") return response.end();
   return response.end(readFileSync(filePath));
-}).listen(port, "127.0.0.1", () => {
-  console.log(`Ritmo is running at http://127.0.0.1:${port}`);
+}).listen(port, "0.0.0.0", () => {
+  console.log(`Ritmo is listening on port ${port}`);
 });
 
